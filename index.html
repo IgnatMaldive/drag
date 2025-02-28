@@ -288,11 +288,61 @@
             .container {
                 grid-template-columns: 1fr;
             }
-            
+
             .main-column, .sidebar-column {
                 grid-column: 1 / -1;
             }
         }
+
+        /* New Icons for Product Grid */
+        .product-icon-1 { /* Diamond Shape */
+            background: linear-gradient(45deg, transparent 50%, #ffffff 50%),
+                        linear-gradient(-45deg, transparent 50%, #ffffff 50%);
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            background-size: 40px 40px;
+            opacity: 0.3;
+            mask: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+            -webkit-mask: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        .product-icon-2 { /* Circle Shape */
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .product-icon-3 { /* Star Shape */
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.3);
+            -webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>');
+            mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>');
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+        }
+
+        /* Editable Text Card Styles */
+        .editable-text-card h2 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+            color: #fff; /* Or any heading color you prefer */
+        }
+
+        .editable-text-card h3, .editable-text-card p, .editable-text-card small {
+            color: #ddd; /* Subheading color */
+            font-size: 1em;
+            line-height: 1.4;
+        }
+
+
     </style>
 </head>
 <body>
@@ -330,6 +380,12 @@
                 </div>
             </div>
 
+            <!-- New Editable Text Card -->
+            <div class="card draggable editable-text-card" data-draggable="true">
+                <h2 contenteditable="true">Your Section Heading</h2>
+                <p contenteditable="true">This is a subheading or short paragraph that you can easily edit directly in the browser. Click here and start typing to change this text.  You can format the text using browser's default content editing capabilities (like bold, italics, etc. depending on browser support).</p>
+            </div>
+
             <div class="card draggable" data-draggable="true">
                 <nav class="nav-tabs">
                     <a href="#" class="nav-tab active">Products</a>
@@ -341,27 +397,72 @@
 
             <div class="products-grid draggable" data-draggable="true">
                 <div class="product-card">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="3" x2="21" y2="21"></line>
-                        <line x1="21" y1="3" x2="3" y2="21"></line>
-                    </svg>
+                    <div class="product-icon-1"></div>
                 </div>
                 <div class="product-card">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="3" x2="21" y2="21"></line>
-                        <line x1="21" y1="3" x2="3" y2="21"></line>
-                    </svg>
+                    <div class="product-icon-2"></div>
                 </div>
                 <div class="product-card">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3">
-                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-                        <line x1="3" y1="3" x2="21" y2="21"></line>
-                        <line x1="21" y1="3" x2="3" y2="21"></line>
-                    </svg>
+                    <div class="product-icon-3"></div>
                 </div>
             </div>
+
+            <!-- New Draggable Elements moved to main column and resized -->
+            <div class="card draggable" data-draggable="true" style="height: 200px;">
+                <h3>Realtime Bitcoin Chart</h3>
+                <div style="height: 150px; border: 1px dashed #444; display: flex; align-items: center; justify-content: center; color: #888;">
+                    [ Bitcoin Chart Placeholder ]
+                </div>
+                <small style="color: #666; display: block; margin-top: 10px;">BTC/USD - Last Updated: Now</small>
+            </div>
+
+            <div class="card draggable" data-draggable="true" style="width: 40%; min-width: 250px;">
+                <h3>Token Mini-Wallet</h3>
+                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                    <div style="width: 30px; height: 30px; border-radius: 50%; background: #333;"></div>
+                    <div>
+                        <h4>ETH</h4>
+                        <small style="color: #888">$2,200</small>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <input type="number" placeholder="Amount" class="search-bar" style="width: 60%; padding: 5px; border-radius: 4px; background: #2a2a2a; border: none; color: #fff; font-size: 0.9em;">
+                    <button class="connect-wallet" style="padding: 6px 12px; font-size: 0.9em;">Buy/Sell</button>
+                </div>
+            </div>
+
+            <div class="card draggable" data-draggable="true" style="width: 60%; min-width: 300px;">
+                <h3>Interactive Crypto Wallet</h3>
+                <div style="margin-bottom: 15px;">
+                    <strong>Total Balance:</strong> <span style="font-weight: 500;">$15,789</span>
+                </div>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #2a2a2a;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 20px; height: 20px; border-radius: 50%; background: #444;"></div> <span>BTC</span>
+                        </div>
+                        <span>$8,500</span>
+                    </li>
+                    <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #2a2a2a;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 20px; height: 20px; border-radius: 50%; background: #444;"></div> <span>ETH</span>
+                        </div>
+                        <span>$5,200</span>
+                    </li>
+                    <li style="display: flex; justify-content: space-between; align-items: center; padding: 8px 0;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 20px; height: 20px; border-radius: 50%; background: #444;"></div> <span>SOL</span>
+                        </div>
+                        <span>$2,089</span>
+                    </li>
+                </ul>
+                <div style="display: flex; justify-content: space-around; margin-top: 15px;">
+                    <button class="connect-wallet" style="padding: 6px 12px; font-size: 0.9em;">Send</button>
+                    <button class="connect-wallet" style="padding: 6px 12px; font-size: 0.9em;">Receive</button>
+                </div>
+            </div>
+
+
         </div>
 
         <div class="sidebar-column dropzone" data-dropzone="sidebar">
@@ -412,6 +513,8 @@
                     <div class="stat-value">1.2k</div>
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -420,7 +523,7 @@
             // Get all draggable elements and dropzones
             const draggables = document.querySelectorAll('[data-draggable="true"]');
             const dropzones = document.querySelectorAll('.dropzone');
-            
+
             // Variables to store dragging state
             let draggedElement = null;
             let initialX = 0;
@@ -430,56 +533,57 @@
             let placeholderElement = null;
             let originalDropzone = null;
             let originalNextSibling = null;
-            
+
             // Initialize draggable elements
             draggables.forEach(draggable => {
                 initDraggable(draggable);
             });
-            
+
             function initDraggable(draggable) {
                 // Make the element draggable
                 draggable.addEventListener('mousedown', startDrag);
                 draggable.addEventListener('touchstart', startDrag, { passive: false });
-                
+
                 // Prevent default behavior for clicks on interactive elements
-                const interactiveElements = draggable.querySelectorAll('button, input, a, select');
+                const interactiveElements = draggable.querySelectorAll('button, input, a, select, [contenteditable]'); // Include contenteditable elements
                 interactiveElements.forEach(element => {
                     element.addEventListener('mousedown', e => e.stopPropagation());
                     element.addEventListener('touchstart', e => e.stopPropagation());
                 });
             }
-            
+
             // Drag start handler
             function startDrag(e) {
                 // Check if this is an interactive element
-                if (e.target.tagName.toLowerCase() === 'input' || 
-                    e.target.tagName.toLowerCase() === 'button' || 
+                if (e.target.tagName.toLowerCase() === 'input' ||
+                    e.target.tagName.toLowerCase() === 'button' ||
                     e.target.tagName.toLowerCase() === 'a' ||
-                    e.target.tagName.toLowerCase() === 'select') {
+                    e.target.tagName.toLowerCase() === 'select' ||
+                    e.target.hasAttribute('contenteditable')) { // Check for contenteditable
                     return;
                 }
-                
+
                 if (e.type === 'touchstart') {
                     e.preventDefault(); // Prevent scrolling on touch devices
                 }
-                
+
                 // Get the draggable parent element if clicked on a child
                 let target = e.target;
                 while (target !== null && !target.hasAttribute('data-draggable')) {
                     target = target.parentElement;
                 }
-                
+
                 if (!target) return;
-                
+
                 draggedElement = target;
-                
+
                 // Store original position
                 originalDropzone = findParentDropzone(draggedElement);
                 originalNextSibling = draggedElement.nextElementSibling;
-                
+
                 // Calculate offsets
                 const rect = draggedElement.getBoundingClientRect();
-                
+
                 if (e.type === 'touchstart') {
                     initialX = e.touches[0].clientX;
                     initialY = e.touches[0].clientY;
@@ -487,40 +591,40 @@
                     initialX = e.clientX;
                     initialY = e.clientY;
                 }
-                
+
                 offsetX = initialX - rect.left;
                 offsetY = initialY - rect.top;
-                
+
                 // Create placeholder
                 placeholderElement = document.createElement('div');
                 placeholderElement.className = 'placeholder';
                 placeholderElement.style.width = `${draggedElement.offsetWidth}px`;
                 placeholderElement.style.height = `${draggedElement.offsetHeight}px`;
-                
+
                 // Insert placeholder
                 draggedElement.parentNode.insertBefore(placeholderElement, draggedElement);
-                
+
                 // Setup dragging styles
                 draggedElement.style.position = 'fixed';
                 draggedElement.style.zIndex = '1000';
                 draggedElement.style.width = `${rect.width}px`;
                 draggedElement.classList.add('dragging');
-                
+
                 // Set initial position
                 updatePosition(initialX, initialY);
-                
+
                 // Add event listeners for dragging
                 document.addEventListener('mousemove', drag);
                 document.addEventListener('touchmove', drag, { passive: false });
                 document.addEventListener('mouseup', endDrag);
                 document.addEventListener('touchend', endDrag);
-                
+
                 // Highlight all dropzones
                 dropzones.forEach(zone => {
                     zone.classList.add('highlight');
                 });
             }
-            
+
             // Find the parent dropzone of an element
             function findParentDropzone(element) {
                 let parent = element.parentElement;
@@ -529,15 +633,15 @@
                 }
                 return parent;
             }
-            
+
             // Dragging handler
             function drag(e) {
                 if (!draggedElement) return;
-                
+
                 e.preventDefault();
-                
+
                 let clientX, clientY;
-                
+
                 if (e.type === 'touchmove') {
                     clientX = e.touches[0].clientX;
                     clientY = e.touches[0].clientY;
@@ -545,16 +649,16 @@
                     clientX = e.clientX;
                     clientY = e.clientY;
                 }
-                
+
                 updatePosition(clientX, clientY);
-                
+
                 // Find the element under the cursor
                 draggedElement.style.display = 'none';
                 const elementBelow = document.elementFromPoint(clientX, clientY);
                 draggedElement.style.display = '';
-                
+
                 if (!elementBelow) return;
-                
+
                 // Find the dropzone
                 let currentDropzone = null;
                 if (elementBelow.classList.contains('dropzone')) {
@@ -562,18 +666,18 @@
                 } else {
                     currentDropzone = findParentDropzone(elementBelow);
                 }
-                
+
                 if (!currentDropzone) return;
-                
+
                 // Find all draggable elements in this dropzone
                 const draggablesInZone = Array.from(currentDropzone.querySelectorAll('[data-draggable="true"]'))
                     .filter(el => el !== draggedElement && el.style.position !== 'fixed');
-                
+
                 // Find the closest element to insert the placeholder before/after
                 let closestElement = null;
                 let closestDistance = Infinity;
                 let insertAfter = false;
-                
+
                 // Default: If no draggables in zone, just append to zone
                 if (draggablesInZone.length === 0) {
                     // Only move the placeholder if it's not already in this dropzone
@@ -588,17 +692,17 @@
                     draggablesInZone.forEach(draggable => {
                         const rect = draggable.getBoundingClientRect();
                         const draggableMiddleY = rect.top + rect.height / 2;
-                        
+
                         // Calculate distance to this element
                         const distance = Math.abs(clientY - draggableMiddleY);
-                        
+
                         if (distance < closestDistance) {
                             closestDistance = distance;
                             closestElement = draggable;
                             insertAfter = clientY > draggableMiddleY;
                         }
                     });
-                    
+
                     if (closestElement) {
                         // Only move if needed
                         if (insertAfter) {
@@ -623,17 +727,17 @@
                     }
                 }
             }
-            
+
             // End dragging
             function endDrag() {
                 if (!draggedElement) return;
-                
+
                 // Remove event listeners
                 document.removeEventListener('mousemove', drag);
                 document.removeEventListener('touchmove', drag);
                 document.removeEventListener('mouseup', endDrag);
                 document.removeEventListener('touchend', endDrag);
-                
+
                 // Reset dragged element styles
                 draggedElement.style.position = '';
                 draggedElement.style.top = '';
@@ -641,20 +745,20 @@
                 draggedElement.style.width = '';
                 draggedElement.style.zIndex = '';
                 draggedElement.classList.remove('dragging');
-                
+
                 // Check if placeholder exists and has a parent
                 if (placeholderElement && placeholderElement.parentNode) {
                     // Determine the new parent container
                     const newContainer = placeholderElement.parentNode;
-                    
+
                     // Replace placeholder with dragged element
                     newContainer.replaceChild(draggedElement, placeholderElement);
-                    
+
                     // If moved to a different container, adjust styles as needed
                     if (newContainer !== originalDropzone) {
                         // Adjust width to fit new container
                         draggedElement.style.width = '100%';
-                        
+
                         // Check if the element needs to adapt to new container width
                         if (newContainer.classList.contains('sidebar-column')) {
                             // Adjust for sidebar
@@ -678,23 +782,23 @@
                         originalDropzone.appendChild(draggedElement);
                     }
                 }
-                
+
                 // Remove dropzone highlighting
                 dropzones.forEach(zone => {
                     zone.classList.remove('highlight');
                 });
-                
+
                 // Reset variables
                 draggedElement = null;
                 placeholderElement = null;
                 originalDropzone = null;
                 originalNextSibling = null;
             }
-            
+
             // Update position of dragged element
             function updatePosition(clientX, clientY) {
                 if (!draggedElement) return;
-                
+
                 // Calculate position
                 draggedElement.style.left = `${clientX - offsetX}px`;
                 draggedElement.style.top = `${clientY - offsetY}px`;
