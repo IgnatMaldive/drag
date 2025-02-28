@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NFT Store</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #000000;
+            color: #ffffff;
+        }
+
+        /* Grid Layout */
+        .container {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Draggable areas */
+        .main-column {
+            grid-column: span 9;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-column {
+            grid-column: span 3;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Dropzones - areas where items can be dropped */
+        .dropzone {
+            min-height: 50px;
+            padding: 10px;
+            border-radius: 8px;
+            background-color: rgba(255, 255, 255, 0.03);
+            transition: background-color 0.2s;
+        }
+
+        .dropzone.highlight {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #2a2a2a;
+            margin-bottom: 20px;
+            grid-column: 1 / -1;
+        }
+
+        .search-bar {
+            background: #1a1a1a;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            color: #ffffff;
+            width: 300px;
+        }
+
+        .top-bar-icons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .icon {
+            color: #ffffff;
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        .connect-wallet {
+            background: #ffffff;
+            color: #000000;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Profile Section */
+        .profile-card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .profile-header {
+            padding: 10px 15px;
+            border-bottom: 1px solid #2a2a2a;
+        }
+
+        .banner {
+            height: 150px;
+            background: #2a2a2a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .banner-placeholder {
+            width: 40px;
+            height: 40px;
+            opacity: 0.3;
+        }
+
+        .profile-content {
+            padding: 40px 20px 20px;
+            position: relative;
+        }
+
+        .profile-picture {
+            width: 80px;
+            height: 80px;
+            background: #ffffff;
+            border-radius: 50%;
+            position: absolute;
+            top: -40px;
+            left: 20px;
+            border: 4px solid #1a1a1a;
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 20px;
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .nav-tab {
+            color: #888;
+            text-decoration: none;
+            padding: 10px 0;
+        }
+
+        .nav-tab.active {
+            color: #fff;
+            border-bottom: 2px solid #fff;
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 8px;
+        }
+
+        .product-card {
+            background: #2a2a2a;
+            border-radius: 8px;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Shared Card Styles */
+        .card {
+            background: #1a1a1a;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .now-playing {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #2a2a2a;
+            border-radius: 2px;
+            margin: 10px 0;
+        }
+
+        .progress {
+            width: 30%;
+            height: 100%;
+            background: #ffffff;
+            border-radius: 2px;
+        }
+
+        .friends-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .friend {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .friend-avatar {
+            width: 32px;
+            height: 32px;
+            background: #2a2a2a;
+            border-radius: 50%;
+        }
+
+        .online-indicator {
+            width: 8px;
+            height: 8px;
+            background: #4caf50;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+
+        .store-stats {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+        }
+
+        .stat-value {
+            text-align: right;
+            font-weight: 500;
+        }
+
+        /* Draggable element styles */
+        .draggable {
+            cursor: move;
+            user-select: none;
+            position: relative;
+            margin-bottom: 10px;
+            width: 100%; /* Make sure elements take full width of container */
+        }
+
+        .draggable::before {
+            content: "≡";
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            padding: 2px 4px;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .draggable:hover::before {
+            opacity: 1;
+        }
+
+        .dragging {
+            opacity: 0.8;
+            z-index: 1000;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+
+        .placeholder {
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-column, .sidebar-column {
+                grid-column: 1 / -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar draggable" data-draggable="true">
+        <input type="text" class="search-bar" placeholder="Search files...">
+        <div class="top-bar-icons">
+            <span class="icon">⊞</span>
+            <span class="icon">🌙</span>
+            <span class="icon">🔔</span>
+            <button class="connect-wallet">Connect Wallet</button>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="main-column dropzone" data-dropzone="main">
+            <div class="profile-card draggable" data-draggable="true">
+                <div class="profile-header">
+                    <div>CryptoStore_Tom</div>
+                    <small style="color: #888">Last login: 2 hours ago</small>
+                </div>
+                <div class="banner">
+                    <svg class="banner-placeholder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="3" x2="21" y2="21"></line>
+                        <line x1="21" y1="3" x2="3" y2="21"></line>
+                    </svg>
+                </div>
+                <div class="profile-content">
+                    <div class="profile-picture"></div>
+                    <div style="margin-left: 100px">
+                        <h2>Tom's NFT Emporium 🔗</h2>
+                        <p style="color: #888; margin-top: 5px">Creating and curating the finest digital assets</p>
+                        <small style="color: #666">eth.tom.eth • Joined 2023</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card draggable" data-draggable="true">
+                <nav class="nav-tabs">
+                    <a href="#" class="nav-tab active">Products</a>
+                    <a href="#" class="nav-tab">About</a>
+                    <a href="#" class="nav-tab">Blog</a>
+                    <a href="#" class="nav-tab">Reviews</a>
+                </nav>
+            </div>
+
+            <div class="products-grid draggable" data-draggable="true">
+                <div class="product-card">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="3" x2="21" y2="21"></line>
+                        <line x1="21" y1="3" x2="3" y2="21"></line>
+                    </svg>
+                </div>
+                <div class="product-card">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="3" x2="21" y2="21"></line>
+                        <line x1="21" y1="3" x2="3" y2="21"></line>
+                    </svg>
+                </div>
+                <div class="product-card">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.3">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="3" y1="3" x2="21" y2="21"></line>
+                        <line x1="21" y1="3" x2="3" y2="21"></line>
+                    </svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="sidebar-column dropzone" data-dropzone="sidebar">
+            <div class="card now-playing draggable" data-draggable="true">
+                <h3>Now Playing</h3>
+                <p>Crypto Beats - NFT Anthem</p>
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                    <small>1:24</small>
+                    <small>3:45</small>
+                </div>
+            </div>
+
+            <div class="card draggable" data-draggable="true">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px">
+                    <h3>Friends</h3>
+                    <small style="color: #888">3 online</small>
+                </div>
+                <div class="friends-list">
+                    <div class="friend">
+                        <div class="friend-avatar"></div>
+                        <span>CryptoArtist</span>
+                        <div class="online-indicator"></div>
+                    </div>
+                    <div class="friend">
+                        <div class="friend-avatar"></div>
+                        <span>NFTCollector</span>
+                        <div class="online-indicator"></div>
+                    </div>
+                    <div class="friend">
+                        <div class="friend-avatar"></div>
+                        <span>PixelPunks</span>
+                        <div class="online-indicator"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card draggable" data-draggable="true">
+                <h3 style="margin-bottom: 15px">Store Stats</h3>
+                <div class="store-stats">
+                    <div>Total Sales</div>
+                    <div class="stat-value">142 ETH</div>
+                    <div>Products</div>
+                    <div class="stat-value">24</div>
+                    <div>Followers</div>
+                    <div class="stat-value">1.2k</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get all draggable elements and dropzones
+            const draggables = document.querySelectorAll('[data-draggable="true"]');
+            const dropzones = document.querySelectorAll('.dropzone');
+            
+            // Variables to store dragging state
+            let draggedElement = null;
+            let initialX = 0;
+            let initialY = 0;
+            let offsetX = 0;
+            let offsetY = 0;
+            let placeholderElement = null;
+            let originalDropzone = null;
+            let originalNextSibling = null;
+            
+            // Initialize draggable elements
+            draggables.forEach(draggable => {
+                initDraggable(draggable);
+            });
+            
+            function initDraggable(draggable) {
+                // Make the element draggable
+                draggable.addEventListener('mousedown', startDrag);
+                draggable.addEventListener('touchstart', startDrag, { passive: false });
+                
+                // Prevent default behavior for clicks on interactive elements
+                const interactiveElements = draggable.querySelectorAll('button, input, a, select');
+                interactiveElements.forEach(element => {
+                    element.addEventListener('mousedown', e => e.stopPropagation());
+                    element.addEventListener('touchstart', e => e.stopPropagation());
+                });
+            }
+            
+            // Drag start handler
+            function startDrag(e) {
+                // Check if this is an interactive element
+                if (e.target.tagName.toLowerCase() === 'input' || 
+                    e.target.tagName.toLowerCase() === 'button' || 
+                    e.target.tagName.toLowerCase() === 'a' ||
+                    e.target.tagName.toLowerCase() === 'select') {
+                    return;
+                }
+                
+                if (e.type === 'touchstart') {
+                    e.preventDefault(); // Prevent scrolling on touch devices
+                }
+                
+                // Get the draggable parent element if clicked on a child
+                let target = e.target;
+                while (target !== null && !target.hasAttribute('data-draggable')) {
+                    target = target.parentElement;
+                }
+                
+                if (!target) return;
+                
+                draggedElement = target;
+                
+                // Store original position
+                originalDropzone = findParentDropzone(draggedElement);
+                originalNextSibling = draggedElement.nextElementSibling;
+                
+                // Calculate offsets
+                const rect = draggedElement.getBoundingClientRect();
+                
+                if (e.type === 'touchstart') {
+                    initialX = e.touches[0].clientX;
+                    initialY = e.touches[0].clientY;
+                } else {
+                    initialX = e.clientX;
+                    initialY = e.clientY;
+                }
+                
+                offsetX = initialX - rect.left;
+                offsetY = initialY - rect.top;
+                
+                // Create placeholder
+                placeholderElement = document.createElement('div');
+                placeholderElement.className = 'placeholder';
+                placeholderElement.style.width = `${draggedElement.offsetWidth}px`;
+                placeholderElement.style.height = `${draggedElement.offsetHeight}px`;
+                
+                // Insert placeholder
+                draggedElement.parentNode.insertBefore(placeholderElement, draggedElement);
+                
+                // Setup dragging styles
+                draggedElement.style.position = 'fixed';
+                draggedElement.style.zIndex = '1000';
+                draggedElement.style.width = `${rect.width}px`;
+                draggedElement.classList.add('dragging');
+                
+                // Set initial position
+                updatePosition(initialX, initialY);
+                
+                // Add event listeners for dragging
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag, { passive: false });
+                document.addEventListener('mouseup', endDrag);
+                document.addEventListener('touchend', endDrag);
+                
+                // Highlight all dropzones
+                dropzones.forEach(zone => {
+                    zone.classList.add('highlight');
+                });
+            }
+            
+            // Find the parent dropzone of an element
+            function findParentDropzone(element) {
+                let parent = element.parentElement;
+                while (parent !== null && !parent.classList.contains('dropzone')) {
+                    parent = parent.parentElement;
+                }
+                return parent;
+            }
+            
+            // Dragging handler
+            function drag(e) {
+                if (!draggedElement) return;
+                
+                e.preventDefault();
+                
+                let clientX, clientY;
+                
+                if (e.type === 'touchmove') {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
+                } else {
+                    clientX = e.clientX;
+                    clientY = e.clientY;
+                }
+                
+                updatePosition(clientX, clientY);
+                
+                // Find the element under the cursor
+                draggedElement.style.display = 'none';
+                const elementBelow = document.elementFromPoint(clientX, clientY);
+                draggedElement.style.display = '';
+                
+                if (!elementBelow) return;
+                
+                // Find the dropzone
+                let currentDropzone = null;
+                if (elementBelow.classList.contains('dropzone')) {
+                    currentDropzone = elementBelow;
+                } else {
+                    currentDropzone = findParentDropzone(elementBelow);
+                }
+                
+                if (!currentDropzone) return;
+                
+                // Find all draggable elements in this dropzone
+                const draggablesInZone = Array.from(currentDropzone.querySelectorAll('[data-draggable="true"]'))
+                    .filter(el => el !== draggedElement && el.style.position !== 'fixed');
+                
+                // Find the closest element to insert the placeholder before/after
+                let closestElement = null;
+                let closestDistance = Infinity;
+                let insertAfter = false;
+                
+                // Default: If no draggables in zone, just append to zone
+                if (draggablesInZone.length === 0) {
+                    // Only move the placeholder if it's not already in this dropzone
+                    if (placeholderElement.parentNode !== currentDropzone) {
+                        if (placeholderElement.parentNode) {
+                            placeholderElement.parentNode.removeChild(placeholderElement);
+                        }
+                        currentDropzone.appendChild(placeholderElement);
+                    }
+                } else {
+                    // Find where to insert among existing draggables
+                    draggablesInZone.forEach(draggable => {
+                        const rect = draggable.getBoundingClientRect();
+                        const draggableMiddleY = rect.top + rect.height / 2;
+                        
+                        // Calculate distance to this element
+                        const distance = Math.abs(clientY - draggableMiddleY);
+                        
+                        if (distance < closestDistance) {
+                            closestDistance = distance;
+                            closestElement = draggable;
+                            insertAfter = clientY > draggableMiddleY;
+                        }
+                    });
+                    
+                    if (closestElement) {
+                        // Only move if needed
+                        if (insertAfter) {
+                            if (placeholderElement.nextSibling !== closestElement.nextSibling) {
+                                if (placeholderElement.parentNode) {
+                                    placeholderElement.parentNode.removeChild(placeholderElement);
+                                }
+                                if (closestElement.nextSibling) {
+                                    closestElement.parentNode.insertBefore(placeholderElement, closestElement.nextSibling);
+                                } else {
+                                    closestElement.parentNode.appendChild(placeholderElement);
+                                }
+                            }
+                        } else {
+                            if (placeholderElement.nextSibling !== closestElement) {
+                                if (placeholderElement.parentNode) {
+                                    placeholderElement.parentNode.removeChild(placeholderElement);
+                                }
+                                closestElement.parentNode.insertBefore(placeholderElement, closestElement);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // End dragging
+            function endDrag() {
+                if (!draggedElement) return;
+                
+                // Remove event listeners
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', endDrag);
+                document.removeEventListener('touchend', endDrag);
+                
+                // Reset dragged element styles
+                draggedElement.style.position = '';
+                draggedElement.style.top = '';
+                draggedElement.style.left = '';
+                draggedElement.style.width = '';
+                draggedElement.style.zIndex = '';
+                draggedElement.classList.remove('dragging');
+                
+                // Check if placeholder exists and has a parent
+                if (placeholderElement && placeholderElement.parentNode) {
+                    // Determine the new parent container
+                    const newContainer = placeholderElement.parentNode;
+                    
+                    // Replace placeholder with dragged element
+                    newContainer.replaceChild(draggedElement, placeholderElement);
+                    
+                    // If moved to a different container, adjust styles as needed
+                    if (newContainer !== originalDropzone) {
+                        // Adjust width to fit new container
+                        draggedElement.style.width = '100%';
+                        
+                        // Check if the element needs to adapt to new container width
+                        if (newContainer.classList.contains('sidebar-column')) {
+                            // Adjust for sidebar
+                            if (draggedElement.classList.contains('products-grid')) {
+                                // Change grid to single column in sidebar
+                                draggedElement.style.gridTemplateColumns = '1fr';
+                            }
+                        } else {
+                            // Adjust back to main column
+                            if (draggedElement.classList.contains('products-grid')) {
+                                // Restore grid to 3 columns in main
+                                draggedElement.style.gridTemplateColumns = 'repeat(3, 1fr)';
+                            }
+                        }
+                    }
+                } else {
+                    // If placeholder was removed, return element to original position
+                    if (originalNextSibling) {
+                        originalDropzone.insertBefore(draggedElement, originalNextSibling);
+                    } else {
+                        originalDropzone.appendChild(draggedElement);
+                    }
+                }
+                
+                // Remove dropzone highlighting
+                dropzones.forEach(zone => {
+                    zone.classList.remove('highlight');
+                });
+                
+                // Reset variables
+                draggedElement = null;
+                placeholderElement = null;
+                originalDropzone = null;
+                originalNextSibling = null;
+            }
+            
+            // Update position of dragged element
+            function updatePosition(clientX, clientY) {
+                if (!draggedElement) return;
+                
+                // Calculate position
+                draggedElement.style.left = `${clientX - offsetX}px`;
+                draggedElement.style.top = `${clientY - offsetY}px`;
+            }
+        });
+    </script>
+</body>
+</html>
